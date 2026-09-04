@@ -81,6 +81,14 @@ test('fahrenheitToKelvin stays finite at Number.MAX_VALUE', () => {
   assert.ok(Number.isFinite(fahrenheitToCelsius(Number.MAX_VALUE)))
 })
 
+test('kelvinToFahrenheit stays finite at large finite inputs', () => {
+  const f = kelvinToFahrenheit(9e307)
+  assert.ok(Number.isFinite(f), `expected finite Fahrenheit, got ${f}`)
+  const expected = 9e307 / 5 * 9
+  assert.ok(Math.abs(f - expected) / expected < 1e-12, `${f} !~ ${expected}`)
+  assert.ok(Number.isFinite(celsiusToFahrenheit(9e307)))
+})
+
 test('type is checked before range', () => {
   assert.throws(() => kelvinToCelsius(NaN), TypeError)
 })
