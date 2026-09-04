@@ -24,6 +24,12 @@ test('does not mutate input', () => {
   assert.deepEqual(input, [3, 1, 2])
 })
 
+test('even length does not overflow for large finite values', () => {
+  assert.equal(median([Number.MAX_VALUE, Number.MAX_VALUE]), Number.MAX_VALUE)
+  assert.equal(median([-Number.MAX_VALUE, -Number.MAX_VALUE]), -Number.MAX_VALUE)
+  assert.equal(median([Number.MAX_VALUE, Number.MAX_VALUE / 2]), Number.MAX_VALUE * 0.75)
+})
+
 test('throws TypeError for non-array', () => {
   assert.throws(() => median('1,2,3'), TypeError)
   assert.throws(() => median(null), TypeError)
