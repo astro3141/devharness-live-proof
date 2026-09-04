@@ -73,6 +73,14 @@ test('below absolute zero throws RangeError', () => {
   assert.throws(() => fahrenheitToKelvin(-460), RangeError)
 })
 
+test('fahrenheitToKelvin stays finite at Number.MAX_VALUE', () => {
+  const k = fahrenheitToKelvin(Number.MAX_VALUE)
+  assert.ok(Number.isFinite(k), `expected finite Kelvin, got ${k}`)
+  const expected = Number.MAX_VALUE / 9 * 5
+  assert.ok(Math.abs(k - expected) / expected < 1e-12, `${k} !~ ${expected}`)
+  assert.ok(Number.isFinite(fahrenheitToCelsius(Number.MAX_VALUE)))
+})
+
 test('type is checked before range', () => {
   assert.throws(() => kelvinToCelsius(NaN), TypeError)
 })
