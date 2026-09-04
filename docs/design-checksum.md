@@ -10,16 +10,16 @@ Status: decided (issue #18). Design only — no implementation in this lane.
 - Strictly stronger detection than Fletcher-16: catches all single-bit
   and double-bit errors and all burst errors up to 32 bits; a 32-bit
   space also collides far less often than Fletcher's 16 bits.
-- Interoperable: results can be checked against zlib, `cksum`-style
-  tools, and countless existing implementations. Fletcher-16 has no
-  comparable ecosystem.
+- Interoperable: matches zlib's `crc32()`, Python's `zlib.crc32`, and
+  the CRC fields in gzip/ZIP/PNG files. (Default POSIX `cksum` uses a
+  different CRC and is not compatible.) Fletcher-16 has no ecosystem.
 - Fletcher-16's only advantage is speed on constrained hardware, which
   is irrelevant for a Node library; a table-driven CRC-32 is plenty
   fast in JS.
 
 ## 2. Public API
 
-ESM named export (matching `lib/greet.js` / `lib/temperature.js` style):
+ESM named export (`lib/greet.js` style; see `docs/design-temperature.md` §2):
 
 ```js
 export function crc32(input) // string | Uint8Array -> number
@@ -44,7 +44,7 @@ Fail fast with thrown errors; never return `NaN` or sentinel values.
 - Empty input is valid, not an error: `crc32("")` returns `0`, the
   standard CRC-32 of zero bytes.
 - Plain built-in error classes; no custom subclasses (same rationale
-  as `lib/temperature.js` §3).
+  as `docs/design-temperature.md` §3).
 
 ## 4. Output format: unsigned number
 
@@ -56,4 +56,4 @@ range `0 … 2³²−1`), never a signed/negative result.
   (`crc32(x).toString(16).padStart(8, "0")`).
 - Returning hex would bake in presentation choices (case, padding,
   `0x` prefix) the library shouldn't own — mirroring the "no rounding
-  in the library" policy of `lib/temperature.js` §4.
+  in the library" policy of `docs/design-temperature.md` §4.
